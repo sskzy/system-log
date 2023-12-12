@@ -60,15 +60,21 @@ public class SysLogAspect {
     private SysLogBo analysisLog(ProceedingJoinPoint point, Long interval) {
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
+        SysLog sysLog = method.getAnnotation(SysLog.class);
 
         SysLogBo sysLogBo = new SysLogBo();
         sysLogBo.setIp(IpUtil.getIpAddress(request));
         sysLogBo.setExec(interval);
+        sysLogBo.setUrl(request.getRequestURI());
         sysLogBo.setLogDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        sysLogBo.setRemark(method.getAnnotation(SysLog.class).remark());
+        sysLogBo.setValue(sysLog.value());
+        sysLogBo.setRemark(sysLog.remark());
+        sysLogBo.setRoleType(sysLog.roleType().getCode());
+        sysLogBo.setOperateType(sysLog.operateType().getCode());
         sysLogBo.setClassPath(point.getTarget().getClass().getName());
         sysLogBo.setMethod(method.getName());
         sysLogBo.setParams(JSONObject.toJSONString(point.getArgs()));
+
         return sysLogBo;
     }
 

@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import com.example.demo.annotation.emun.OperateType;
+import com.example.demo.annotation.emun.RoleType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +18,22 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class SysLogBo {
+    /**
+     * 日志名称
+     */
+    private String value;
+    /**
+     * 访问url
+     */
+    private String url;
+    /**
+     * 日志操作类型
+     */
+    private int operateType;
+    /**
+     * 日志操作角色类型
+     */
+    private int roleType;
     /**
      * ip地址
      */
