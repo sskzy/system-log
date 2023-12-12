@@ -3,18 +3,20 @@ package com.example.demo.aspect;
 import com.alibaba.fastjson2.JSONObject;
 import com.example.demo.annotation.SysLog;
 import com.example.demo.domain.SysLogBo;
+import com.example.demo.utils.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author : songtc
@@ -45,6 +47,9 @@ public class SysLogAspect {
         return result;
     }
 
+    @Autowired
+    private HttpServletRequest request;
+
     /**
      * 分析获取日志数据
      *
@@ -57,8 +62,9 @@ public class SysLogAspect {
         Method method = signature.getMethod();
 
         SysLogBo sysLogBo = new SysLogBo();
+        sysLogBo.setIp(IpUtil.getIpAddress(request));
         sysLogBo.setExec(interval);
-        sysLogBo.setLogDateTime(LocalDateTime.now());
+        sysLogBo.setLogDateTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         sysLogBo.setRemark(method.getAnnotation(SysLog.class).remark());
         sysLogBo.setClassPath(point.getTarget().getClass().getName());
         sysLogBo.setMethod(method.getName());
