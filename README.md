@@ -6,12 +6,16 @@
 
   ```java
   @RestController
+  @RequestMapping("msg")
   public class MsgController {
   
-      @SysLog(remark = "remark")
-      @RequestMapping("/login")
-      public void login(String msg) {
+      @Autowired
+      private MsgService msgService;
   
+      @GetMapping("/select")
+      @SysLog(value = "保存数据", remark = "备注", roleType = RoleType.DEFAULT, operateType = OperateType.SELECT)
+      public ReturnData<Msg> select(@PathParam("msg") String msg) {
+          return ReturnData.success("success", msgService.select(msg));
       }
   }
   ```
@@ -19,7 +23,7 @@
 - ##### 日志打印
 
   ```
-  打印一下日志吧! (~^v^)~: SysLogBo(ip=127.0.0.1, classPath=com.example.demo.controller.MsgController, method=login, params=["Hello World"], exec=0, remark=remark, logDateTime=2023-12-12 17:28:13)
+  打印一下日志吧! (~^v^)~: SysLogBo(value=保存数据, url=/msg/select, operateType=4, roleType=0, ip=172.25.96.1, classPath=com.example.demo.controller.MsgController, method=select, params=["hello wrold"], exec=7, remark=备注, logDateTime=2023-12-12 18:03:50)
   ```
 
 - ##### 日志保存
